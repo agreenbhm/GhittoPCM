@@ -9,24 +9,16 @@ Q: What does GhittoPCM do?
 A: GhittoPCM downloads configuration files from network devices and saves changes, allowing for differences from past configs to be viewed later.
 
 Q: How does it do that?
-A: At launch, a TFTP server is spawned locally.  GhittoPCM will then Telnet to the devices specified (more on that later), login, and upload the 
-	device configuration to the local machine using TFTP.  After all devices have saved their configs, Git will initialize a local repository (if not already present), 
-	add new files (for new devices), and update existing files (for existing devices).
+A: At launch, a TFTP server is spawned locally.  GhittoPCM will then Telnet to the devices specified (more on that later), login, and upload the device configuration to the local machine using TFTP.  After all devices have saved their configs, Git will initialize a local repository (if not already present), add new files (for new devices), and update existing files (for existing devices).
 
 Q: Why is this helpful?
-A: GhittoPCM allows for as many devices as desired to have their running-config backed up at a schedule of your choosing (more on that later).  This ensures that 
-	changes made to a network device don't have to be manually saved every single time you modify something. Although that's best practice, sometimes it doesn't always happen... 
-	By saving changes in a Git repository, you can go back and look at the differences between each config, that way, if a new config is malfunctioning, you can always revert 
-	back to a known working config, without keeping multiple copies of configs laying around.
+A: GhittoPCM allows for as many devices as desired to have their running-config backed up at a schedule of your choosing (more on that later).  This ensures that changes made to a network device don't have to be manually saved every single time you modify something. Although that's best practice, sometimes it doesn't always happen... By saving changes in a Git repository, you can go back and look at the differences between each config, that way, if a new config is malfunctioning, you can always revert back to a known working config, without keeping multiple copies of configs laying around.
 
 Q: Doesn't something like this already exist?
-A: Yup!  But as far as I can tell, not for free on Windows.  RANCID is a *nix-based open-source program that does something similar, and Solarwinds' CatTools is a paid 
-	Windows-based offering, but it starts at $750.  I don't have any Linux servers I wanted to throw RANCID on, and I don't need to spend $750 to backup my 10~ switches.
+A: Yup!  But as far as I can tell, not for free on Windows.  RANCID is a *nix-based open-source program that does something similar, and Solarwinds' CatTools is a paid Windows-based offering, but it starts at $750.  I don't have any Linux servers I wanted to throw RANCID on, and I don't need to spend $750 to backup my 10~ switches.
 
 Q: What's with the name?
-A: GhittoPCM is combination of a few things: Git, ghetto, and PCM (which is the name of HP's network management tool.  I believe it stands for ProCurve Manager, but I'm using the 
-	acronym as ProCurve Configuration Manager).  Ghetto?  Kinda-sorta - this started off as a VBScript, and that was definitely ghetto, but I'd like to think it's slightly 
-	less-ghetto	after a couple days of work.
+A: GhittoPCM is combination of a few things: Git, ghetto, and PCM (which is the name of HP's network management tool.  I believe it stands for ProCurve Manager, but I'm using the acronym as ProCurve Configuration Manager).  Ghetto?  Kinda-sorta - this started off as a VBScript, and that was definitely ghetto, but I'd like to think it's slightly less-ghetto	after a couple days of work.
 
 Q: What works?
 A: *Creating local, temporary TFTP server.
@@ -53,19 +45,15 @@ Instructions:
 
 2. Install Git for Windows on your system.  Use the installable version, not the .7z package.  Make sure you install Environmental Variables to PATH, if given the option.
 
-3. Install TFTPy (included with this distribution).  I've included a batch file called "install_tftpy.bat" in the "tftp" folder.  Double-click on this batch file to install.
-	You can also manually install TFTPy by opening up a command prompt in the "tftp" folder, then running "python setup.py build", then "python setup.py install".
+3. Install TFTPy (included with this distribution).  I've included a batch file called "install_tftpy.bat" in the "tftp" folder.  Double-click on this batch file to install.  You can also manually install TFTPy by opening up a command prompt in the "tftp" folder, then running "python setup.py build", then "python setup.py install".
 
 4. Once all of the prerequisites are installed, open "GhittoPCM.ini" from the main GhittoPCM folder.
 	
 	~The following fields are required:
 
-	*tftpRoot - This is the full path of the directory (WITHOUT a trailing "\") the TFTP server will save files to, where your Git repo will be created,
-	and where your device config files will be saved.
+	*tftpRoot - This is the full path of the directory (WITHOUT a trailing "\") the TFTP server will save files to, where your Git repo will be created, and where your device config files will be saved.
 
-	*switchList - This is the full path of the text file listing the switches to backup.  One device per-line (IP or hostname).  Devices cannot require "Press Any Key To Continue"
-	before entering username.  See below for devices that DO require this.  If ALL of your devices require "Press Any Key To Continue", still include this entry, and create an
-	empty file for the target.
+	*switchList - This is the full path of the text file listing the switches to backup.  One device per-line (IP or hostname).  Devices cannot require "Press Any Key To Continue" before entering username.  See below for devices that DO require this.  If ALL of your devices require "Press Any Key To Continue", still include this entry, and create an empty file for the target.
 	
 	*switchUsername - This is the username to connect to each device via Telnet with.
 	
@@ -77,15 +65,11 @@ Instructions:
 	
 	~The following fields are not mandatory, but are dependent on each other:
 	
-	*continueBannerSwitchList - This is the full path of the text file listing all additional switches to backup, one device per-line (IP or hostname), that require you to 
-	"Press Any Key To Continue" before entering a username.  NOTE: If using this list, you must specify "yes" for "continueBannerSwitchListExist" in the "options" section.
+	*continueBannerSwitchList - This is the full path of the text file listing all additional switches to backup, one device per-line (IP or hostname), that require you to "Press Any Key To Continue" before entering a username.  NOTE: If using this list, you must specify "yes" for "continueBannerSwitchListExist" in the "options" section.
 	
-	*continueBannerSwitchListExist - This is the on/off switch to determine if a file listing devices that require "Press Any Key To Continue" before entering a username 
-	should be used.  Default is "no".  To use secondary list for "Continue Banner", change this to "yes".  If this is set to "yes" and there is no file specified for 
-	"continueBannerSwitchList", the program WILL crash.
+	*continueBannerSwitchListExist - This is the on/off switch to determine if a file listing devices that require "Press Any Key To Continue" before entering a username should be used.  Default is "no".  To use secondary list for "Continue Banner", change this to "yes".  If this is set to "yes" and there is no file specified for "continueBannerSwitchList", the program WILL crash.
 	
-5. Once your "GhittoPCM.ini" file is configured, launch the program by opening a command-prompt in the GhittoPCM directory, and execute "python GhittoPCM.py".  A log file
-	will be created in the GhittoPCM directory.
+5. Once your "GhittoPCM.ini" file is configured, launch the program by opening a command-prompt in the GhittoPCM directory, and execute "python GhittoPCM.py".  A log file will be created in the GhittoPCM directory.
 ---------------------------
 To Do:
 
