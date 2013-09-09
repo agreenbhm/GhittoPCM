@@ -6,10 +6,14 @@ import tftpy
 import ConfigParser
 import socket
 import os
+import getpass
 
 def main():
 
 	global globalError
+	global tftpServer
+	
+	os.system("cls")
 	
 	#create config file parser
 	config = ConfigParser.ConfigParser()
@@ -22,10 +26,20 @@ def main():
 	
 	#read username & password from GhittoPCM.ini
 	user = config.get('credentials', 'switchUsername')
+	if user == "":
+		while user == "":
+			user = raw_input("Please enter a username to connect with: ")
+	
 	password = config.get('credentials', 'switchPassword')
+	if password == "":
+		while password == "":
+			password = getpass.getpass("\nPlease enter a password to connect with: ")
 	
 	#read directory to store config files/root for TFTP server from GhittoPCM.ini
 	tftpRoot = config.get('directory', 'tftpRoot')
+	
+	if tftpRoot == "":		
+		tftpRoot = os.path.dirname(os.path.realpath(__file__)) + '\\configs'
 	
 	#check if tftp root folder exists, create if non-existent
 	if not os.path.exists(tftpRoot):
@@ -37,6 +51,12 @@ def main():
 	
 	#read full file path of switch list from GhittoPCM.ini (is it clear you must name the config file that?)
 	hostFile = config.get('files', 'switchList')
+	if hostFile == "":
+		while hostFile == "":
+			hostFile = raw_input("\nPlease enter the device to check: ")
+			os.system("echo " + hostFile + " > " + os.path.dirname(os.path.realpath(__file__)) + "\GhittoPCM_DeviceList.txt")
+		
+		hostFile = os.path.dirname(os.path.realpath(__file__)) + '\GhittoPCM_DeviceList.txt'
 	
 	#check if options section exists in GhittoPCM.ini
 	#if options section does exist
@@ -66,7 +86,7 @@ def main():
 	
 	#clear console & print banner
 	os.system("cls")
-	print "GhittoPCM v1.0.20130906\n"
+	print "GhittoPCM v1.0.20130909\n"
 	print "by AGreen BHM\n"
 	print "---------------"
 	print "\nStarting TFTP server..."
@@ -89,18 +109,29 @@ def main():
 	print "\nConfig Directory: " + tftpRoot + "\n\n---------------\n"
 	
 	#go to function to read hosts and get configs
-	readAndConnect(user, password, tftp, hostFile)
+	readAndConnect(user, password, tftpRoot, tftp, hostFile)
 	
 	#if second list of switches (with continue banner), re-run download using second list (and pass argument to enable)
 	if continueBannerSwitchListExist == "yes":
-		readAndConnect(user, password, tftp, continueBannerSwitchList, continueBannerSwitchListExist)
+		readAndConnect(user, password, tftpRoot, tftp, continueBannerSwitchList, continueBannerSwitchListExist)
+	
+	#remove tmp directory
+	#os.rmdir(tftpRoot + "\\tmp\\")
+	
+	#go to function to shutdown TFTP server gracefully
+	shutdownTftp()
 	
 	#go to function to perform git tasks
 	git(tftpRoot, gitUser, gitEmail)
+
 	
 def startTftpServer(tftpRoot):
 	#create TFTP server using defined directory for target
 	global globalError
+	global tftpServer
+		
+	if not os.path.exists(tftpRoot):
+		os.makedirs(tftpRoot)
 	
 	try:
 		tftpServer = tftpy.TftpServer(tftpRoot)
@@ -111,7 +142,7 @@ def startTftpServer(tftpRoot):
 		print "\nError message is: " + str(e)
 		globalError = True
 		
-def readAndConnect(user, password, tftp, hostFile, continueBannerSwitchListExist="no"):
+def readAndConnect(user, password, tftpRoot, tftp, hostFile, continueBannerSwitchListExist="no"):
 	
 	#open switch list file for reading
 	hostFile = open(hostFile, "r")
@@ -169,7 +200,21 @@ def readAndConnect(user, password, tftp, hostFile, continueBannerSwitchListExist
 		
 		#disconnect from switch
 		tn.close()
+		
+	hostFile.close()
 
+def shutdownTftp():
+	global tftpServer
+	
+	#wait for TFTP server to finish open sessions, then shut down
+	print "---------------\n"
+	print "Shutting down TFTP server...\n"
+	time.sleep(1)
+	tftpServer.stop()
+	while not tftpServer.shutDown:
+		pass
+	print "Done\n"
+		
 def git(tftpRoot, gitUser, gitEmail):
 	#set directory variables
 	gitDir = tftpRoot + "\.git"
@@ -184,6 +229,7 @@ def git(tftpRoot, gitUser, gitEmail):
 		os.system("git init \"" + tftpRoot + "\" >> \"" + tftpRoot + "\"\..\GhittoPCM.log")
 		os.system("git " + gitDirPath + " " + gitWorkTree + " config --local user.name \"" + gitUser + "\"")
 		os.system("git " + gitDirPath + " " + gitWorkTree + " config --local user.email \"" + gitEmail + "\"")
+		os.system("git " + gitDirPath + " " + gitWorkTree + " config --local core.autocrlf true")
 		
 	#add new files to git repo
 	print "---------------"
@@ -214,6 +260,7 @@ def endThreads():
 if __name__ == '__main__':
 	#execute main commands
 	globalError = False
+	tftpServer = False
 	main()
 	endThreads()
 

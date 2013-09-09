@@ -22,6 +22,7 @@ class TftpServer(TftpSession):
         self.listenip = None
         self.listenport = None
         self.sock = None
+        self.shutDown = False
         # FIXME: What about multiple roots?
         self.root = os.path.abspath(tftproot)
         self.dyn_file_func = dyn_file_func
@@ -86,8 +87,9 @@ class TftpServer(TftpSession):
 
             elif self.shutdown_gracefully:
                 if not self.sessions:
-                    log.warn("In graceful shutdown mode and all sessions complete.")
+                    #log.warn("In graceful shutdown mode and all sessions complete.")
                     self.sock.close()
+                    self.shutDown = True
                     break
 
             # Build the inputlist array of sockets to select() on.
@@ -210,7 +212,7 @@ class TftpServer(TftpSession):
         log.debug("server returning from while loop")
         self.shutdown_gracefully = self.shutdown_immediately = False
 
-    def stop(force=False):
+    def stop(self, force=False):
         """Stop the server gracefully. Do not take any new transfers,
         but complete the existing ones. If force is True, drop everything
         and stop. Note, immediately will not interrupt the select loop, it

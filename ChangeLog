@@ -1,0 +1,9 @@
+-v1.0.20130906
+Initial Release
+
+-v1.0.20130909
+Modified TFTP server code - *MAKE SURE YOU RE-INSTALL TFTPy*
+Cleaned up TFTP server shutdown function
+Added ability to work without config file (GhittoPCM.ini) - enter username, password & 1 device to check on the fly
+Cleaned up file reading
+Added line to Git init to work with CRLF oddities (Git was not showing differences, was showing entire deletion and insertion)
