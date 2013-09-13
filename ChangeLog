@@ -1,5 +1,9 @@
--v1.0.20130906
-Initial Release
+-v1.1.20130913
+New dependencies: Twisted (http://twistedmatrix.com/trac/) & Zope Interface (https://pypi.python.org/pypi/zope.interface/3.6.7#downloads)
+	*MUST install these dependencies before runtime*
+Added ability to run as a service (use "-s" or "--service" at the command line, and make sure your GhittoPCM.ini file is complete)
+Added ability to run with minimal GhittoPCM.ini (for on-demand mode).  Username, password, and target device can be entered at runtime.  Target directory will be auto-created.
+Added pretty web-interface to explore all backed-up devices and revisions.  Ability to compare current file to all past configs.  Use "-w" or "--web" at the command line to launch.
 
 -v1.0.20130909
 Modified TFTP server code - *MAKE SURE YOU RE-INSTALL TFTPy*
@@ -7,3 +11,6 @@ Cleaned up TFTP server shutdown function
 Added ability to work without config file (GhittoPCM.ini) - enter username, password & 1 device to check on the fly
 Cleaned up file reading
 Added line to Git init to work with CRLF oddities (Git was not showing differences, was showing entire deletion and insertion)
+
+-v1.0.20130906
+Initial Release

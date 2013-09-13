@@ -43,6 +43,8 @@ Instructions:
 
 1. Install Python 2.x (2.7 is what I'm using) on your system.  NOTE: Python 3.x has not been tested and will likely not work!
 
+1a. Install Python library dependencies: Twisted (http://twistedmatrix.com/trac/) & Zope Interface (https://pypi.python.org/pypi/zope.interface/3.6.7#downloads)
+
 2. Install Git for Windows on your system.  Use the installable version, not the .7z package.  Make sure you install Environmental Variables to PATH, if given the option.
 
 3. Install TFTPy (included with this distribution).  I've included a batch file called "install_tftpy.bat" in the "tftp" folder.  Double-click on this batch file to install.  You can also manually install TFTPy by opening up a command prompt in the "tftp" folder, then running "python setup.py build", then "python setup.py install".
@@ -52,6 +54,7 @@ Instructions:
 	~The following fields are required:
 
 	*tftpRoot - This is the full path of the directory (WITHOUT a trailing "\") the TFTP server will save files to, where your Git repo will be created, and where your device config files will be saved.
+		*NOTE: In order to use the web GUI, make sure this is a folder called "configs" within the folder GhittoPCM.py is located in.  If not specified in GhittoPCM.ini, this folder will be autocreated and used as the target.
 
 	*switchList - This is the full path of the text file listing the switches to backup.  One device per-line (IP or hostname).  Devices cannot require "Press Any Key To Continue" before entering username.  See below for devices that DO require this.  If ALL of your devices require "Press Any Key To Continue", still include this entry, and create an empty file for the target.
 	
@@ -70,16 +73,20 @@ Instructions:
 	*continueBannerSwitchListExist - This is the on/off switch to determine if a file listing devices that require "Press Any Key To Continue" before entering a username should be used.  Default is "no".  To use secondary list for "Continue Banner", change this to "yes".  If this is set to "yes" and there is no file specified for "continueBannerSwitchList", the program WILL crash.
 	
 5. Once your "GhittoPCM.ini" file is configured, launch the program by opening a command-prompt in the GhittoPCM directory, and execute "python GhittoPCM.py".  A log file will be created one directory up from your TFTP root folder.
-
+	*Command line arguments are: -w or --web (to launch the web GUI [details on that below] and -s or --service to run GhittoPCM as a service.  If service mode enabled, devices will be backed up every hour, on the hour.
+	
 6. If you want to view the changes between different versions of the device configs, use the tool "Git GUI" (installed with Git) and browse to the config directory, then choose the menu option to view branch files or changes.
+	***NEW***
+	To view current configuration, past configurations, and to compare, use the "-w" or "--web" command line switch to launch the web GUI
+	*********
+	
+
 ---------------------------
 To Do:
 
 *Add SSH support
 
 *Add ability to upload firmware to list of devices using command-line arguments
-
-*Add Twisted web-interface to view versions different versions of config files
 
 
 
