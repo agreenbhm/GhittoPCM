@@ -15,6 +15,8 @@ import string
 from twisted.web import server, resource
 from twisted.internet import reactor
 
+global webBool
+global serviceBool
 
 class HelloResource(resource.Resource):
 	isLeaf = True
@@ -514,7 +516,7 @@ ul.cssMenu li:hover > ul
 	<div id="header-wrapper-title">
 		<div id="header" class="container">
 			<div id="logo" style="height: 150px;">
-				<h1><a href="#">GhittoPCM</a></h1>
+				<h1><a href="#">GhittoPCM</a></h1>				
 			</div>
 		</div>
 	</div>
@@ -740,8 +742,13 @@ def readAndConnect(user, password, tftpRoot, tftp, hostFile, continueBannerSwitc
 		print "\tConnecting to " + host + "..."
 
 		#connect to host via telnet
-		tn = telnetlib.Telnet(host)
-
+		try:
+			tn = telnetlib.Telnet(host,23,15)
+		except:
+			print "\n\tCould not establish session with " + host + "\n"
+			break
+			
+			
 		#if continue banner on switch, wait for it, then send newline (enter)
 		if continueBannerSwitchListExist == "yes":
 			tn.read_until("Press any key to continue")
@@ -841,6 +848,20 @@ def endThreads():
 				print(str(thread.getName()) + ' could not be terminated')
 	sys.exit()
 	
+def service():
+	while True:
+		currentTime = datetime.datetime.now()
+		if str(currentTime.minute) == "0":
+			main()
+			os.system("cls")
+			if webBool == True:
+				print "Running GhittoPCM web interface on port 8080\n"
+			print "Config backup completed at " + str(datetime.datetime.now())
+			print "\n"
+			nextTime = datetime.datetime.now() + datetime.timedelta(0,3600)
+			print "Next backup at " + str(nextTime.hour) + ":00"
+			time.sleep(60)
+		time.sleep(30)
 
 if __name__ == '__main__':
 	#execute main commands
@@ -853,29 +874,29 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	
 	os.system("cls")
-	nextTime = datetime.datetime.now() + datetime.timedelta(0,3600)
-	print "Running in service mode.  Next backup at " + str(nextTime.hour) + ":00"
+	#nextTime = datetime.datetime.now() + datetime.timedelta(0,3600)
+	#print "Running in service mode.  Next backup at " + str(nextTime.hour) + ":00"
 	
 	if args.service:
-		while True:
-			currentTime = datetime.datetime.now()
-			if str(currentTime.minute) == "0":
-				main()
-				os.system("cls")
-				print "Config backup completed at " + str(datetime.datetime.now())
-				print "\n"
-				nextTime = datetime.datetime.now() + datetime.timedelta(0,3600)
-				print "Next backup at " + str(nextTime.hour) + ":00"
-				time.sleep(60)
+		
+		#create separate thread for TFTP server (so it doesn't hang the program)
+		global serviceBool
+		serviceBool = True
+		currentTime = datetime.datetime.now()
+		nextTime = datetime.datetime.now() + datetime.timedelta(0,3600)
+		print "Running as a service. Next backup at " + str(nextTime.hour) + ":00"
+		serviceThread = threading.Thread(target=service)
+		serviceThread.start()
 		
 	if args.web:
-		os.system("cls")
+
+		global webBool
+		webBool = True
 		print "Running GhittoPCM web interface on port 8080"
 		reactor.listenTCP(8080, server.Site(HelloResource()))
 		reactor.run()
 		
-	if not args.service and not agrs.web:
+	if not args.service and not args.web:
 		main()
-	
-	endThreads()
+		endThreads()
 

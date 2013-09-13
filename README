@@ -74,6 +74,7 @@ Instructions:
 	
 5. Once your "GhittoPCM.ini" file is configured, launch the program by opening a command-prompt in the GhittoPCM directory, and execute "python GhittoPCM.py".  A log file will be created one directory up from your TFTP root folder.
 	*Command line arguments are: -w or --web (to launch the web GUI [details on that below] and -s or --service to run GhittoPCM as a service.  If service mode enabled, devices will be backed up every hour, on the hour.
+	*Command line arguments can be run individually or together (GhittoPCM.py -w -s)
 	
 6. If you want to view the changes between different versions of the device configs, use the tool "Git GUI" (installed with Git) and browse to the config directory, then choose the menu option to view branch files or changes.
 	***NEW***
