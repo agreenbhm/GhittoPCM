@@ -1,4 +1,4 @@
--v1.1.20130913
+-v1.1.20130913.1
 New dependencies: Twisted (http://twistedmatrix.com/trac/) & Zope Interface (https://pypi.python.org/pypi/zope.interface/3.6.7#downloads)
 	*MUST install these dependencies before runtime*
 Added ability to run as a service (use "-s" or "--service" at the command line, and make sure your GhittoPCM.ini file is complete)
