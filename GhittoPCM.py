@@ -126,12 +126,11 @@ class HelloResource(resource.Resource):
 			compare = "0"
 		
 		if len(commitRevisList) == 1:
-			revisData = "<h4>(no previous revisions)</h4>"
+			revisData = '<span class="h3_red"><center>(no previous revisions)</center></span>'
 		
 		if len(commitHashList) - 1 == int(compare):
-			recentNote = " (oldest)"
-		elif int(compare) == 1:
-			recentNote = " (" + compare + " revision back)"
+			recentNote = " (" + compare + " revisions back; oldest)"
+		
 		else:
 			recentNote = " (" + compare + " revisions back)"
 		
@@ -166,7 +165,7 @@ class HelloResource(resource.Resource):
 			commitRevisLinks += """
 				<li><form id="form""" + str(x) + """" name="submitForm" method="POST">
 				<input type="hidden" name="form-field" """ + value + """
-				<a href="javascript:;" onclick="document.getElementById('form""" + str((x)) + """').submit();">""" + commitRevisList[x] + """<br></a>
+				<a href="javascript:;" onclick="document.getElementById('form""" + str((x)) + """').submit();">""" + commitRevisList[x] + """ (""" + str(x) + """ revisions back)<br></a>
 				</form></li>
 				"""
 		commitRevisLinks += '</script>'	
@@ -465,6 +464,12 @@ hr {
 	color: #B0B0B0;
 }
 
+.h3_red
+{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 10pt;
+	color: #FF0000;
+}
 .h3_link
 {
 	font-family: 'Open Sans', sans-serif;
@@ -545,8 +550,8 @@ ul.cssMenu li:hover > ul
 	</li>
 </u1>
 <br>
--------------------------------------------------------------<h4>""" + logHead + log + """
-</h4>
+-------------------------------------------------------------<br><br><span class="h3_font">""" + logHead + log + """
+</span>
 <br>
 <table border="1">
 <tr>
@@ -623,10 +628,10 @@ def main():
 			password = getpass.getpass("\nPlease enter a password to connect with: ")
 	
 	#read directory to store config files/root for TFTP server from GhittoPCM.ini
-	tftpRoot = config.get('directory', 'tftpRoot')
+	#tftpRoot = config.get('directory', 'tftpRoot')
 	
-	if tftpRoot == "":		
-		tftpRoot = os.path.dirname(os.path.realpath(__file__)) + '\\configs'
+	#if tftpRoot == "":		
+	tftpRoot = os.path.dirname(os.path.realpath(__file__)) + '\\configs'
 	
 	#check if tftp root folder exists, create if non-existent
 	if not os.path.exists(tftpRoot):
@@ -899,4 +904,3 @@ if __name__ == '__main__':
 	if not args.service and not args.web:
 		main()
 		endThreads()
-
