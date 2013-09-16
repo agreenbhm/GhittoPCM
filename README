@@ -1,4 +1,4 @@
-GhittoPCM v1.0.20130909.1
+GhittoPCM v1.0.20130916
 "Back That Rack Up!"
 by AGreen BHM
 -----------------------
@@ -36,6 +36,11 @@ A: Find me on GitHub, username agreenbhm, project GhittoPCM.  Pull requests are 
 Notes:
 
 TFTPy, by Michael P. Soulier (https://github.com/msoulier/tftpy), and slightly modified by me, is used and included in this distribution.
+-----------------------
+Usage:
+
+python.exe GhittoPCM.py [-w] [-s]
+GhittoPCM.exe [-w] [-s]
 -----------------------
 Instructions:
 

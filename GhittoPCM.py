@@ -2,7 +2,6 @@ import telnetlib
 import sys
 import time
 import threading
-import tftpy
 import ConfigParser
 import socket
 import os
@@ -12,9 +11,19 @@ import argparse
 import re
 import string
 
-from twisted.web import server, resource
-from twisted.internet import reactor
+try:
+	import tftpy
+except:
+	print 'Dependency "TFTPy" not met.  Please install.'
+	sys.exit()
 
+try:
+	from twisted.web import server, resource
+	from twisted.internet import reactor
+except:
+	print 'Dependency "Twisted" not met.  Please install.'
+	sys.exit()
+	
 global webBool
 global serviceBool
 
@@ -615,14 +624,22 @@ def main():
 	
 	#read from GhittoPCM.ini
 	config.read(configFile)
-	
+
 	#read username & password from GhittoPCM.ini
-	user = config.get('credentials', 'switchUsername')
+	try:
+		user = config.get('credentials', 'switchUsername')
+	except:
+		user = ""
+		
 	if user == "":
 		while user == "":
 			user = raw_input("Please enter a username to connect with: ")
 	
-	password = config.get('credentials', 'switchPassword')
+	try:
+		password = config.get('credentials', 'switchPassword')
+	except:
+		password = ""
+	
 	if password == "":
 		while password == "":
 			password = getpass.getpass("\nPlease enter a password to connect with: ")
@@ -638,11 +655,23 @@ def main():
 		os.makedirs(tftpRoot)
 	
 	#read git username & email address from GhittoPCM.ini
-	gitUser = config.get('git', 'gitUsername')
-	gitEmail = config.get('git', 'gitEmail')
+	try:
+		gitUser = config.get('git', 'gitUsername')
+	except:
+		gitUser = "GhittoPCM"
+	
+	try:
+		gitEmail = config.get('git', 'gitEmail')
+	except:
+		gitEmail = "System@GhittoPCM"
+		
 	
 	#read full file path of switch list from GhittoPCM.ini (is it clear you must name the config file that?)
-	hostFile = config.get('files', 'switchList')
+	try:
+		hostFile = config.get('files', 'switchList')
+	except:
+		hostFile = ""
+	
 	if hostFile == "":
 		while hostFile == "":
 			hostFile = raw_input("\nPlease enter the device to check: ")

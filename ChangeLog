@@ -1,3 +1,7 @@
+-v1.1.20130916
+Added some exception handling in the event that the INI file is missing
+Compiled to binary EXE
+
 -v1.1.20130913.1
 New dependencies: Twisted (http://twistedmatrix.com/trac/) & Zope Interface (https://pypi.python.org/pypi/zope.interface/3.6.7#downloads)
 	*MUST install these dependencies before runtime*

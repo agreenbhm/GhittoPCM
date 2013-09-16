@@ -221,3 +221,4 @@ launch_GhittoPCM.bat
 configs/
 publish.py
 GhittoPCM_DeviceList.txt
+pyinstaller-2.0/
