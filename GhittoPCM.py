@@ -707,7 +707,7 @@ def main():
 	
 	#clear console & print banner
 	os.system("cls")
-	print "GhittoPCM v1.1.20130913.1\n"
+	print "GhittoPCM v1.1.20140207.1\n"
 	print "by AGreen BHM\n"
 	print "---------------"
 	print "\nStarting TFTP server..."
