@@ -9,7 +9,7 @@ setup(name='tftpy',
       author_email='msoulier@digitaltorque.ca',
       url='http://tftpy.sourceforge.net',
       packages=['tftpy'],
-      scripts=['bin/tftpy_client.py','bin/tftpy_server.py'],
+      scripts=['tftpy/TftpClient.py','tftpy/TftpServer.py'],
       classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
